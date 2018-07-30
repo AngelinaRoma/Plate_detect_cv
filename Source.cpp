@@ -47,18 +47,24 @@ void findLabel(IplImage* img, float max_ratio, float min_ratio, int max_area, in
 
 int main()
 {
-	char filename[] = "pic1.jpg";
+	char filename[] = "15.bmp";
 	
 IplImage* Img = cvLoadImage(filename, 0); 
 IplImage* Gray = cvCreateImage(cvSize(218, 58), 8, 1); 
 IplImage* Img2 = cvCreateImage(cvSize(218, 58), 8, 1);
 IplImage* Bin = cvCreateImage(cvSize(218, 58), 8, 1);
-IplImage* tmp= cvCreateImage(cvSize(21, 33), 8, 1);;
+IplImage* tmp= cvCreateImage(cvSize(21, 33), 8, 1);
+
 
 // нормализуем изображение
 cvResize(Img, Gray, INTER_LINEAR);
-cvSmooth(Gray, Img2, CV_BILATERAL, 3, 3);
-cvThreshold(Gray, Img2, 128, 255, CV_THRESH_BINARY);
+
+cvSmooth(Gray, Img2, CV_GAUSSIAN, 9, 9);
+cvEqualizeHist(Img2, Img2);
+
+cvAdaptiveThreshold(Img2, Img2, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 5, 3);
+//cvThreshold(Img2, Img2, 128, 255, THRESH_BINARY);
+
 cvCopy(Img2, Bin);
 
 // изображение после преобразований
